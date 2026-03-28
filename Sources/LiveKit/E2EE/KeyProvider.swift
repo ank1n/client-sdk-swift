@@ -111,7 +111,7 @@ public final class BaseKeyProvider: NSObject, Loggable, Sendable {
                                                       failureTolerance: options.failureTolerance,
                                                       keyRingSize: options.keyRingSize,
                                                       discardFrameWhenCryptorNotReady: false,
-                                                      keyDerivationAlgorithm: options.useHKDF ? .hkdf : .pbkdf2)
+                                                      keyDerivationAlgorithm: options.useHKDF ? .HKDF : .PBKDF2)
         if isSharedKey, sharedKey != nil {
             let keyData = sharedKey!.data(using: .utf8)!
             rtcKeyProvider.setSharedKey(keyData, with: 0)
@@ -127,7 +127,7 @@ public final class BaseKeyProvider: NSObject, Loggable, Sendable {
                                                       failureTolerance: options.failureTolerance,
                                                       keyRingSize: options.keyRingSize,
                                                       discardFrameWhenCryptorNotReady: false,
-                                                      keyDerivationAlgorithm: options.useHKDF ? .hkdf : .pbkdf2)
+                                                      keyDerivationAlgorithm: options.useHKDF ? .HKDF : .PBKDF2)
     }
 
     // MARK: - Key management
