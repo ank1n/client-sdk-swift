@@ -39,12 +39,17 @@ public final class KeyProviderOptions: NSObject, Sendable {
 
     public let keyRingSize: Int32
 
+    /// Key derivation algorithm. Use `.hkdf` for compatibility with LiveKit JS SDK.
+    /// Default is `.pbkdf2` for backward compatibility.
+    public let useHKDF: Bool
+
     public init(sharedKey: Bool = true,
                 ratchetSalt: Data = defaultRatchetSalt.data(using: .utf8)!,
                 ratchetWindowSize: Int32 = defaultRatchetWindowSize,
                 uncryptedMagicBytes: Data = defaultMagicBytes.data(using: .utf8)!,
                 failureTolerance: Int32 = defaultFailureTolerance,
-                keyRingSize: Int32 = defaultKeyRingSize)
+                keyRingSize: Int32 = defaultKeyRingSize,
+                useHKDF: Bool = false)
     {
         self.sharedKey = sharedKey
         self.ratchetSalt = ratchetSalt
@@ -52,6 +57,7 @@ public final class KeyProviderOptions: NSObject, Sendable {
         self.uncryptedMagicBytes = uncryptedMagicBytes
         self.failureTolerance = failureTolerance
         self.keyRingSize = keyRingSize
+        self.useHKDF = useHKDF
     }
 
     // MARK: - Equal
@@ -103,7 +109,9 @@ public final class BaseKeyProvider: NSObject, Loggable, Sendable {
                                                       sharedKeyMode: isSharedKey,
                                                       uncryptedMagicBytes: options.uncryptedMagicBytes,
                                                       failureTolerance: options.failureTolerance,
-                                                      keyRingSize: options.keyRingSize)
+                                                      keyRingSize: options.keyRingSize,
+                                                      discardFrameWhenCryptorNotReady: false,
+                                                      keyDerivationAlgorithm: options.useHKDF ? .hkdf : .pbkdf2)
         if isSharedKey, sharedKey != nil {
             let keyData = sharedKey!.data(using: .utf8)!
             rtcKeyProvider.setSharedKey(keyData, with: 0)
@@ -117,7 +125,9 @@ public final class BaseKeyProvider: NSObject, Loggable, Sendable {
                                                       sharedKeyMode: options.sharedKey,
                                                       uncryptedMagicBytes: options.uncryptedMagicBytes,
                                                       failureTolerance: options.failureTolerance,
-                                                      keyRingSize: options.keyRingSize)
+                                                      keyRingSize: options.keyRingSize,
+                                                      discardFrameWhenCryptorNotReady: false,
+                                                      keyDerivationAlgorithm: options.useHKDF ? .hkdf : .pbkdf2)
     }
 
     // MARK: - Key management
