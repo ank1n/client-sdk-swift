@@ -90,7 +90,7 @@ public final class BaseKeyProvider: NSObject, Loggable, Sendable {
 
     // MARK: - Internal
 
-    let rtcKeyProvider: LKRTCFrameCryptorKeyProvider
+    public let rtcKeyProvider: LKRTCFrameCryptorKeyProvider
 
     // MARK: - State
 
