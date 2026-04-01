@@ -90,7 +90,7 @@ public final class BaseKeyProvider: NSObject, Loggable, Sendable {
 
     // MARK: - Internal
 
-    public let rtcKeyProvider: LKRTCFrameCryptorKeyProvider
+    let rtcKeyProvider: LKRTCFrameCryptorKeyProvider
 
     // MARK: - State
 
@@ -131,6 +131,12 @@ public final class BaseKeyProvider: NSObject, Loggable, Sendable {
     }
 
     // MARK: - Key management
+
+    /// Set raw bytes key directly, bypassing UTF-8 string conversion
+    public func setRawKey(_ keyData: Data, participantId: String, index: Int32) {
+        rtcKeyProvider.setKey(keyData, with: index, forParticipant: participantId)
+        setCurrentKeyIndex(index)
+    }
 
     public func setKey(key: String, participantId: String? = nil, index: Int32? = nil) {
         let targetIndex = index ?? getCurrentKeyIndex()
